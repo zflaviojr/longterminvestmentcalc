@@ -3,186 +3,170 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calculadora de Investimento de Longo Prazo</title>
-  <style>
-      /* Aplica box-sizing a todos os elementos para evitar que padding e bordas afetem a largura */
-      *, *::before, *::after {
-          box-sizing: border-box;
+  <title>LongInvest - Calculadora de Investimento</title>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    // Se o tema não estiver definido no localStorage, define como 'theme-default'
+    if (!localStorage.getItem('theme')) {
+      //localStorage.setItem('theme', 'theme-default');
+      localStorage.setItem('theme', 'theme-violet');
+    }
+    // Aplica o tema salvo ao carregar a página
+    document.documentElement.className = localStorage.getItem('theme');
+
+    /* 
+      Se você deseja alterar o tema diretamente pelo código,
+      basta descomentar a função toggleTheme e chamar-a.
+      
+      Exemplo: Para definir o tema violeta, chame toggleTheme('theme-violet');
+      
+      function toggleTheme(newTheme) {
+        localStorage.setItem('theme', newTheme);
+        document.documentElement.className = newTheme;
       }
-      body {
-          font-family: Arial, sans-serif;
-          background-color: #f5f5f5;
-          margin: 0;
-          padding: 0;
-      }
-      .container {
-          max-width: 800px;
-          margin: 50px auto;
-          background-color: #ffffff;
-          padding: 20px;
-          border-radius: 10px;
-          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      }
-      h1 {
-          text-align: center;
-          color: #333;
-      }
-      form {
-          display: grid;
-          gap: 20px;
-          padding: 0 20px; /* Garante que os campos fiquem com margem lateral consistente */
-      }
-      label {
-          font-size: 1.2em;
-          color: #555;
-      }
-      input[type="number"], select {
-          width: 100%;
-          padding: 10px;
-          font-size: 1em;
-          border-radius: 5px;
-          border: 1px solid #ccc;
-          margin: 0; /* Remove margens padrão para manter o alinhamento */
-      }
-      input[type="submit"] {
-          padding: 15px;
-          font-size: 1.2em;
-          background-color: #28a745;
-          color: #fff;
-          border: none;
-          border-radius: 5px;
-          cursor: pointer;
-          width: auto;  /* O botão terá o tamanho do seu conteúdo */
-          justify-self: center; /* Centraliza o botão dentro da grade do form */
-      }
-      input[type="submit"]:hover {
-          background-color: #218838;
-      }
-      .result {
-          margin-top: 20px;
-          font-size: 1.2em;
-          color: #333;
-          text-align: center;
-      }
-  </style>
+      
+      // Exemplo de uso: 
+      // toggleTheme('theme-violet');
+    */
+  </script>
 </head>
 <body>
-  <div class="container">
-      <h1>Calculadora de Investimento de Longo Prazo</h1>
+
+  <!-- Cabeçalho simulando o topo do app -->
+  <div class="app-header">
+    <h1>LongInvest</h1>
+  </div>
+
+  <!-- Container principal (conteúdo do app) -->
+  <div class="app-container">
+    <!-- Card com o formulário -->
+    <div class="card">
+      <h2>Calculadora de Investimento</h2>
       <form id="investmentForm">
-          <label for="initialInvestment">Valor Inicial (R$):</label>
-          <input type="number" id="initialInvestment" name="initialInvestment" required>
+        <label for="initialInvestment">Valor Inicial (R$):</label>
+        <input type="number" id="initialInvestment" name="initialInvestment" required>
 
-          <label for="investmentType">Tipo de Aporte:</label>
-          <select id="investmentType" name="investmentType">
-              <option value="daily">Diário</option>
-              <option value="monthly">Mensal</option>
-              <option value="annual">Anual</option>
-          </select>
+        <label for="investmentType">Tipo de Aporte:</label>
+        <select id="investmentType" name="investmentType">
+          <option value="daily" data-friendly="Diário">Diário</option>
+          <option value="monthly" data-friendly="Mensal">Mensal</option>
+          <option value="annual" data-friendly="Anual">Anual</option>
+        </select>
 
-          <label for="investmentValue">Valor do Aporte (R$):</label>
-          <input type="number" id="investmentValue" name="investmentValue" required>
+        <label for="investmentValue">Valor do Aporte (R$):</label>
+        <input type="number" id="investmentValue" name="investmentValue" required>
 
-          <label for="investmentPeriod">Período de Investimento:</label>
-          <!-- Valores em meses -->
-          <select id="investmentPeriod" name="investmentPeriod">
-              <option value="1">1 mês</option>
-              <option value="3">3 meses</option>
-              <option value="6">6 meses</option>
-              <option value="12">1 ano</option>
-              <option value="24">2 anos</option>
-              <option value="36">3 anos</option>
-              <option value="60">5 anos</option>
-              <option value="84">7 anos</option>
-              <option value="96">8 anos</option>
-              <option value="120">10 anos</option>
-              <option value="180">15 anos</option>
-              <option value="240">20 anos</option>
-              <option value="360">30 anos</option>
-          </select>
+        <label for="investmentPeriod">Período de Investimento (em meses):</label>
+        <select id="investmentPeriod" name="investmentPeriod">
+          <option value="1">1 mês</option>
+          <option value="3">3 meses</option>
+          <option value="6">6 meses</option>
+          <option value="12">1 ano</option>
+          <option value="24">2 anos</option>
+          <option value="36">3 anos</option>
+          <option value="60">5 anos</option>
+          <option value="84">7 anos</option>
+          <option value="96">8 anos</option>
+          <option value="120">10 anos</option>
+          <option value="180">15 anos</option>
+          <option value="240">20 anos</option>
+          <option value="360">30 anos</option>
+        </select>
 
-          <label for="investmentAsset">Ativo:</label>
-          <select id="investmentAsset" name="investmentAsset">
-              <option value="bitcoin">Bitcoin</option>
-              <option value="dolar">Dólar</option>
-              <option value="sp500">Índice S&P500</option>
-              <option value="nasdaq">Índice NASDAQ</option>
-              <option value="coke">Coca-cola (COKE) NASDAQ</option>
-              <option value="brk_a">Berkshire Hathaway-A</option>
-              <option value="bovespa">Índice Bovespa</option>
-              <option value="tesouro_selic">Tesouro SELIC</option>
-              <option value="poupanca_br">Poupança Brasileira</option>
-          </select>
+        <label for="investmentAsset">Ativo:</label>
+        <select id="investmentAsset" name="investmentAsset">
+          <option value="bitcoin" data-friendly="Bitcoin">Bitcoin</option>
+          <option value="dolar" data-friendly="Dólar">Dólar</option>
+          <option value="sp500" data-friendly="Índice S&P500">Índice S&P500</option>
+          <option value="nasdaq" data-friendly="Índice NASDAQ">Índice NASDAQ</option>
+          <option value="coke" data-friendly="Coca-cola (COKE) NASDAQ">Coca-cola (COKE) NASDAQ</option>
+          <option value="brk_a" data-friendly="Berkshire Hathaway-A">Berkshire Hathaway-A</option>
+          <option value="bovespa" data-friendly="Índice Bovespa">Índice Bovespa</option>
+          <option value="tesouro_selic" data-friendly="Tesouro SELIC">Tesouro SELIC</option>
+          <option value="poupanca_br" data-friendly="Poupança Brasileira">Poupança Brasileira</option>
+        </select>
 
-          <input type="submit" value="Calcular">
+        <input type="submit" value="Calcular">
       </form>
+    </div>
+  </div>
 
-      <div class="result" id="result"></div>
+  <!-- Barra inferior fixa (simulando navegação do app) -->
+  <div class="app-footer">
+    <button>Home</button>
+    <button>Histórico</button>
+    <button>Perfil</button>
   </div>
 
   <script>
-      document.getElementById('investmentForm').addEventListener('submit', function(event) {
-          event.preventDefault();
+    document.getElementById('investmentForm').addEventListener('submit', function(event) {
+      event.preventDefault();
 
-          const initialInvestment = parseFloat(document.getElementById('initialInvestment').value);
-          const investmentType = document.getElementById('investmentType').value;
-          const investmentValue = parseFloat(document.getElementById('investmentValue').value);
-          const investmentPeriod = parseInt(document.getElementById('investmentPeriod').value); // em meses
-          const investmentAsset = document.getElementById('investmentAsset').value;
+      const initialInvestment = parseFloat(document.getElementById('initialInvestment').value);
+      const investmentType = document.getElementById('investmentType').value;
+      const investmentValue = parseFloat(document.getElementById('investmentValue').value);
+      const investmentPeriod = parseInt(document.getElementById('investmentPeriod').value); 
+      
+      // Recupera a descrição amigável diretamente do option selecionado
+      const assetSelect = document.getElementById('investmentAsset');
+      const selectedAssetOption = assetSelect.options[assetSelect.selectedIndex];
+      const investmentAsset = assetSelect.value;
+      const assetFriendly = selectedAssetOption.getAttribute('data-friendly');
 
-          // assetRates representam a taxa média de juros mensal para cada ativo.
-          const assetRates = {
-              bitcoin: 0.0322,
-              dolar: 0.0048,
-              sp500: 0.0125,
-              nasdaq: 0.0152,
-              coke: 0.0317,
-              brk_a: 0.0145,
-              bovespa: 0.0085,
-              tesouro_selic: 0.0072,
-              poupanca_br: 0.00533,
-          };
+      const assetRates = {
+        bitcoin: 0.0322,
+        dolar: 0.0048,
+        sp500: 0.0125,
+        nasdaq: 0.0152,
+        coke: 0.0317,
+        brk_a: 0.0145,
+        bovespa: 0.0085,
+        tesouro_selic: 0.0072,
+        poupanca_br: 0.00533,
+      };
 
-          const rate = assetRates[investmentAsset];
+      const rate = assetRates[investmentAsset] || 0;
 
-          let totalPeriods, periodicRate;
-          if (investmentType === 'daily') {
-              // Converte a taxa mensal para diária: taxa diária = (1 + taxa mensal)^(1/30) - 1
-              totalPeriods = investmentPeriod * 30;
-              periodicRate = Math.pow(1 + rate, 1/30) - 1;
-          } else if (investmentType === 'monthly') {
-              totalPeriods = investmentPeriod;
-              // Para aporte mensal, usamos a taxa mensal diretamente
-              periodicRate = rate;
-          } else if (investmentType === 'annual') {
-              // Converte o período em anos (assumindo que o período informado é em meses)
-              totalPeriods = investmentPeriod / 12;
-              // Converte a taxa mensal para taxa efetiva anual: (1 + taxa mensal)^12 - 1
-              periodicRate = Math.pow(1 + rate, 12) - 1;
-          }
+      let totalPeriods, periodicRate;
+      if (investmentType === 'daily') {
+        totalPeriods = investmentPeriod * 30;
+        periodicRate = Math.pow(1 + rate, 1/30) - 1;
+      } else if (investmentType === 'monthly') {
+        totalPeriods = investmentPeriod;
+        periodicRate = rate;
+      } else if (investmentType === 'annual') {
+        totalPeriods = investmentPeriod / 12;
+        periodicRate = Math.pow(1 + rate, 12) - 1;
+      }
 
-          let totalInvestment = initialInvestment;
-          for (let i = 0; i < totalPeriods; i++) {
-              totalInvestment *= (1 + periodicRate);
-              totalInvestment += investmentValue;
-          }
+      let totalInvestment = initialInvestment;
+      for (let i = 0; i < totalPeriods; i++) {
+        totalInvestment *= (1 + periodicRate);
+        totalInvestment += investmentValue;
+      }
 
-          // Calcula o total aportado: investimento inicial + aportes realizados
-          const totalContributions = initialInvestment + (investmentValue * totalPeriods);
-          // Ganho em relação ao total aportado
-          const gainTotal = totalInvestment - totalContributions;
-          const gainPercentage = (gainTotal / totalContributions) * 100;
-          // Ganho em relação apenas ao valor investido inicialmente
-          const gainInitial = totalInvestment - initialInvestment;
-          const gainInitialPercentage = (gainInitial / initialInvestment) * 100;
+      const totalContributions = initialInvestment + (investmentValue * totalPeriods);
+      const gainTotal = totalInvestment - totalContributions;
+      const gainPercentage = (gainTotal / totalContributions) * 100;
+      const gainInitial = totalInvestment - initialInvestment;
+      const gainInitialPercentage = (gainInitial / initialInvestment) * 100;
 
-          document.getElementById('result').innerHTML = `
-              Valor Acumulado: ${totalInvestment.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}<br>
-              Valor Total Aportado: ${totalContributions.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}<br>
-              Ganho (sobre total aportado): ${gainPercentage.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%<br>
-              Ganho (sobre valor inicial): ${gainInitialPercentage.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%
-          `;
-      });
+      const dataToStore = {
+        initialInvestment,
+        investmentType,
+        investmentValue,
+        investmentPeriod,
+        investmentAsset,
+        assetFriendly,
+        totalInvestment,
+        totalContributions,
+        gainPercentage,
+        gainInitialPercentage
+      };
+
+      localStorage.setItem('investmentData', JSON.stringify(dataToStore));
+      window.location.href = 'results.html';
+    });
   </script>
 </body>
 </html>

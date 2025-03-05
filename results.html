@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LongInvest - Resultados</title>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    // Aplica o tema salvo ao carregar a página
+    document.documentElement.className = localStorage.getItem('theme') || 'theme-default';
+  </script>
+  <style>
+    /* Ajuste para centralizar o título do card de Resultados */
+    .card.results-card h2 {
+      text-align: center;
+    }
+    /* Container do gráfico */
+    .chart-container {
+      position: relative;
+      margin: 0 auto; /* Centraliza horizontalmente */
+      height: 300px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cabeçalho com botão de voltar -->
+  <div class="app-header">
+    <button class="button-back" id="btnBack" style="float:left; margin-left: 15px; margin-top: 3px;">Voltar</button>
+    <h1>Resultados</h1>
+  </div>
+
+  <div class="app-container">
+    <!-- Card 1: Parâmetros da Simulação -->
+    <div class="card">
+      <h2>Parâmetros da Simulação</h2>
+      <div id="summary"></div>
+    </div>
+
+    <!-- Card 2: Evolução da Carteira (Gráfico) -->
+    <div class="card">
+      <h2>Evolução da Carteira</h2>
+      <div class="chart-container">
+        <canvas id="portfolioChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Card 3: Resultados -->
+    <div class="card results-card">
+      <h2>Resultados</h2>
+      <div class="result" id="result"></div>
+    </div>
+  </div>
+
+  <!-- Barra inferior fixa (simulando navegação do app) -->
+  <div class="app-footer">
+    <button>Home</button>
+    <button>Histórico</button>
+    <button>Perfil</button>
+  </div>
+
+  <!-- Carrega Chart.js via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    // Botão de voltar
+    document.getElementById('btnBack').addEventListener('click', () => {
+      window.history.back();
+    });
+
+    // Recupera os dados do localStorage
+    const storedData = localStorage.getItem('investmentData');
+    if (storedData) {
+      const data = JSON.parse(storedData);
+
+      // Exibe o resumo dos parâmetros
+      const summaryEl = document.getElementById('summary');
+      const aporteFriendly = data.investmentType === 'daily' ? 'Diário'
+                            : data.investmentType === 'monthly' ? 'Mensal'
+                            : 'Anual';
+      summaryEl.innerHTML = `
+        <p><strong>Valor Inicial:</strong> R$ ${data.initialInvestment.toLocaleString('pt-BR')}</p>
+        <p><strong>Tipo de Aporte:</strong> ${aporteFriendly}</p>
+        <p><strong>Valor do Aporte:</strong> R$ ${data.investmentValue.toLocaleString('pt-BR')}</p>
+        <p><strong>Período (meses):</strong> ${data.investmentPeriod}</p>
+        <p><strong>Ativo:</strong> ${data.assetFriendly}</p>
+      `;
+
+      // Exibe os resultados
+      const resultEl = document.getElementById('result');
+      resultEl.innerHTML = `
+        <span><strong>Valor Acumulado:</strong> ${data.totalInvestment.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
+        <span><strong>Valor Total Aportado:</strong> ${data.totalContributions.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
+        <span><strong>Ganho (sobre total aportado):</strong> ${data.gainPercentage.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%</span>
+        <span><strong>Ganho (sobre valor inicial):</strong> ${data.gainInitialPercentage.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%</span>
+      `;
+
+      // --------------------------
+      // Geração do gráfico
+      // --------------------------
+      let totalPeriods, periodicRate;
+      const investmentType = data.investmentType;
+      const assetRates = {
+        bitcoin: 0.0322,
+        dolar: 0.0048,
+        sp500: 0.0125,
+        nasdaq: 0.0152,
+        coke: 0.0317,
+        brk_a: 0.0145,
+        bovespa: 0.0085,
+        tesouro_selic: 0.0072,
+        poupanca_br: 0.00533,
+      };
+      const rate = assetRates[data.investmentAsset] || 0;
+      const investmentPeriod = data.investmentPeriod;
+      const investmentValue = data.investmentValue;
+      const initialInvestment = data.initialInvestment;
+
+      if (investmentType === 'daily') {
+        totalPeriods = investmentPeriod * 30;
+        periodicRate = Math.pow(1 + rate, 1/30) - 1;
+      } else if (investmentType === 'monthly') {
+        totalPeriods = investmentPeriod;
+        periodicRate = rate;
+      } else if (investmentType === 'annual') {
+        totalPeriods = investmentPeriod / 12;
+        periodicRate = Math.pow(1 + rate, 12) - 1;
+      }
+
+      // Array de valores e rótulos
+      const portfolioValues = [];
+      const labels = [];
+      let currentValue = initialInvestment;
+      portfolioValues.push(currentValue);
+      labels.push("0");
+
+      for (let i = 1; i <= totalPeriods; i++) {
+        currentValue = currentValue * (1 + periodicRate) + investmentValue;
+        portfolioValues.push(currentValue);
+        labels.push(i.toString());
+      }
+
+      // Obtém as variáveis CSS do tema atual
+      const rootStyles = getComputedStyle(document.documentElement);
+      const primaryRGB = rootStyles.getPropertyValue('--color-primary-rgb').trim();
+
+      // Cria um gradiente para o gráfico
+      const ctx = document.getElementById('portfolioChart').getContext('2d');
+      const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+      gradient.addColorStop(0, `rgba(${primaryRGB}, 0.5)`);
+      gradient.addColorStop(1, `rgba(${primaryRGB}, 0)`);
+
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Valor da Carteira (R$)',
+            data: portfolioValues,
+            borderColor: `rgba(${primaryRGB}, 1)`,
+            backgroundColor: gradient,
+            fill: true,
+            tension: 0.4,
+            borderWidth: 2,
+            pointRadius: 2,
+            pointHoverRadius: 4,
+            pointBackgroundColor: `rgba(${primaryRGB}, 1)`,
+            pointHoverBackgroundColor: `rgba(${primaryRGB}, 0.8)`
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: true,
+              onClick: null,
+              labels: {
+                font: {
+                  size: 14
+                },
+                color: 'var(--color-text-main)'
+              }
+            }
+          },
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: 'Período (meses)',
+                font: {
+                  size: 14
+                },
+                color: 'var(--color-text-main)'
+              },
+              ticks: {
+                font: {
+                  size: 12
+                },
+                color: 'var(--color-text-main)'
+              }
+            },
+            y: {
+              title: {
+                display: true,
+                text: 'Valor (R$)',
+                font: {
+                  size: 14
+                },
+                color: 'var(--color-text-main)'
+              },
+              ticks: {
+                font: {
+                  size: 12
+                },
+                color: 'var(--color-text-main)',
+                callback: function(value) {
+                  return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+  </script>
+</body>
+</html>

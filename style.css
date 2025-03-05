@@ -1,0 +1,201 @@
+/* Reset básico */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /*
+    Variáveis de cor em :root
+    Incluindo --color-primary-rgb para uso no Chart.js
+  */
+  :root {
+    --color-primary: #FFC300;
+    --color-primary-rgb: 255, 195, 0; /* Cor primária em formato RGB (padrão) */
+    --color-bg: #f2f2f2;
+    --color-text-header: #fff;
+    --color-text-main: #333;
+    --color-card-bg: #fff;
+    --color-card-text: #333;
+    --color-input-border: #ccc;
+    --color-input-focus: #FFC300;
+    --color-footer-bg: #fff;
+    --color-footer-text: #777;
+    --color-footer-hover: #FFC300;
+  }
+  
+  /* Tema padrão (amarelo) */
+  .theme-default {
+    --color-primary: #FFC300;
+    --color-primary-rgb: 255, 195, 0;
+    --color-bg: #f2f2f2;
+    --color-text-header: #fff;
+    --color-text-main: #333;
+    --color-card-bg: #fff;
+    --color-card-text: #333;
+    --color-input-border: #ccc;
+    --color-input-focus: #FFC300;
+    --color-footer-bg: #fff;
+    --color-footer-text: #777;
+    --color-footer-hover: #FFC300;
+  }
+  
+  /* Tema violeta (inspirado na imagem) */
+  .theme-violet {
+    --color-primary: #7269ef;
+    --color-primary-rgb: 114, 105, 239; /* Cor primária em formato RGB */
+    --color-bg: #f8f9fd;
+    --color-text-header: #fff;
+    --color-text-main: #333;
+    --color-card-bg: #fff;
+    --color-card-text: #333;
+    --color-input-border: #ccc;
+    --color-input-focus: #7269ef;
+    --color-footer-bg: #fff;
+    --color-footer-text: #888;
+    --color-footer-hover: #7269ef;
+  }
+  
+  body {
+    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+    background-color: var(--color-bg);
+  }
+  
+  /* Cabeçalho fixo, simulando um app */
+  .app-header {
+    background-color: var(--color-primary);
+    color: var(--color-text-header);
+    text-align: center;
+    font-size: 1.5rem;
+    padding: 15px 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 999;
+  }
+  
+  .app-header h1 {
+    font-weight: 600;
+  }
+  
+  /* Container geral (como se fosse a "tela" do app) */
+  .app-container {
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 80px 20px 20px;
+    min-height: 100vh;
+    background-color: var(--color-bg);
+  }
+  
+  /* Card para o conteúdo principal */
+  .card {
+    background-color: var(--color-card-bg);
+    color: var(--color-card-text);
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .card h2 {
+    text-align: center;
+    color: var(--color-text-main);
+    margin-bottom: 20px;
+  }
+  
+  /* Estilização do formulário */
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  label {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--color-text-main);
+  }
+  
+  input[type="number"],
+  select {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--color-input-border);
+    outline: none;
+    transition: border 0.3s ease;
+  }
+  
+  input[type="number"]:focus,
+  select:focus {
+    border-color: var(--color-input-focus);
+  }
+  
+  /* Botão de calcular e botão de voltar */
+  input[type="submit"],
+  .button-back {
+    background-color: var(--color-primary);
+    color: #fff;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: filter 0.3s ease;
+    display: inline-block;
+    text-decoration: none;
+    text-align: center;
+  }
+  
+  input[type="submit"]:hover,
+  .button-back:hover {
+    filter: brightness(0.9);
+  }
+  
+  /* Seção de resultado */
+  .result {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 1rem;
+    color: var(--color-text-main);
+  }
+  
+  .result span {
+    display: block;
+    margin: 8px 0;
+  }
+  
+  /* Rodapé fixo para simular barra inferior de app */
+  .app-footer {
+    background-color: var(--color-footer-bg);
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+    padding: 10px 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 999;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    max-width: 420px;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+  }
+  
+  .app-footer button {
+    background: none;
+    border: none;
+    font-size: 1rem;
+    color: var(--color-footer-text);
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+  
+  .app-footer button:hover {
+    color: var(--color-footer-hover);
+  }
+  
