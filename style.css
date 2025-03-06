@@ -105,6 +105,9 @@
     font-weight: 600;
   }
   
+  .app-header h3 {
+    font-weight: 250;
+  }  
   /* Container geral (como se fosse a "tela" do app) */
   .app-container {
     max-width: 420px;
