@@ -10,10 +10,6 @@
     document.documentElement.className = localStorage.getItem('theme') || 'theme-default';
   </script>
   <style>
-    /* Ajuste para centralizar o título do card de Resultados */
-    .card.results-card h2 {
-      text-align: center;
-    }
     /* Container do gráfico */
     .chart-container {
       position: relative;
@@ -21,6 +17,7 @@
       height: 300px;
       width: 100%;
     }
+   
   </style>
 </head>
 <body>
@@ -76,24 +73,33 @@
 
       // Exibe o resumo dos parâmetros
       const summaryEl = document.getElementById('summary');
-      const aporteFriendly = data.investmentType === 'daily' ? 'Diário'
-                            : data.investmentType === 'monthly' ? 'Mensal'
-                            : 'Anual';
+      const aporteFriendly = data.investmentTypeFriendly;
+      
       summaryEl.innerHTML = `
-        <p><strong>Valor Inicial:</strong> R$ ${data.initialInvestment.toLocaleString('pt-BR')}</p>
+        <p><strong>Investimento Inicial:</strong> R$ ${data.initialInvestment.toLocaleString('pt-BR')}</p>
         <p><strong>Tipo de Aporte:</strong> ${aporteFriendly}</p>
         <p><strong>Valor do Aporte:</strong> R$ ${data.investmentValue.toLocaleString('pt-BR')}</p>
         <p><strong>Período (meses):</strong> ${data.investmentPeriod}</p>
         <p><strong>Ativo:</strong> ${data.assetFriendly}</p>
       `;
 
-      // Exibe os resultados
+      // Exibe os resultados como barras horizontais degradê
       const resultEl = document.getElementById('result');
       resultEl.innerHTML = `
-        <span><strong>Valor Acumulado:</strong> ${data.totalInvestment.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
-        <span><strong>Valor Total Aportado:</strong> ${data.totalContributions.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
-        <span><strong>Ganho (sobre total aportado):</strong> ${data.gainPercentage.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%</span>
-        <span><strong>Ganho (sobre valor inicial):</strong> ${data.gainInitialPercentage.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%</span>
+        <div class="result-bar">
+          <span><strong>Valor Acumulado:</strong>
+          ${data.totalInvestment.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
+        </div>
+        <div class="result-bar">
+          <span><strong>Valor Total Aportado:</strong>
+          ${data.totalContributions.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
+        </div>
+        <div class="result-bar">
+            <span><strong>Ganho (sobre total aportado):</strong> ${data.gainPercentage.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%</span>
+        </div>
+        <div class="result-bar">
+            <span><strong>Ganho (sobre valor inicial):</strong> ${data.gainInitialPercentage.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%</span>
+        </div>
       `;
 
       // --------------------------
@@ -101,7 +107,7 @@
       // --------------------------
       let totalPeriods, periodicRate;
       const investmentType = data.investmentType;
-      const assetRates = {
+      const assetRates = data.assetRates ? data.assetRates : {
         bitcoin: 0.0322,
         dolar: 0.0048,
         sp500: 0.0125,

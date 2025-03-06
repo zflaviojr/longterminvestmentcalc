@@ -8,25 +8,17 @@
   <script>
     // Se o tema não estiver definido no localStorage, define como 'theme-default'
     if (!localStorage.getItem('theme')) {
-      //localStorage.setItem('theme', 'theme-default');
       localStorage.setItem('theme', 'theme-violet');
     }
     // Aplica o tema salvo ao carregar a página
     document.documentElement.className = localStorage.getItem('theme');
 
     /* 
-      Se você deseja alterar o tema diretamente pelo código,
-      basta descomentar a função toggleTheme e chamar-a.
-      
-      Exemplo: Para definir o tema violeta, chame toggleTheme('theme-violet');
-      
+      Exemplo de função para alterar o tema (se necessário):
       function toggleTheme(newTheme) {
         localStorage.setItem('theme', newTheme);
         document.documentElement.className = newTheme;
       }
-      
-      // Exemplo de uso: 
-      // toggleTheme('theme-violet');
     */
   </script>
 </head>
@@ -43,7 +35,7 @@
     <div class="card">
       <h2>Calculadora de Investimento</h2>
       <form id="investmentForm">
-        <label for="initialInvestment">Valor Inicial (R$):</label>
+        <label for="initialInvestment">Investimento Inicial (R$):</label>
         <input type="number" id="initialInvestment" name="initialInvestment" required>
 
         <label for="investmentType">Tipo de Aporte:</label>
@@ -106,6 +98,10 @@
       const investmentType = document.getElementById('investmentType').value;
       const investmentValue = parseFloat(document.getElementById('investmentValue').value);
       const investmentPeriod = parseInt(document.getElementById('investmentPeriod').value); 
+
+      const investmentTypeSelect = document.getElementById('investmentType');
+      const selectedInvestmentOption = investmentTypeSelect.options[investmentTypeSelect.selectedIndex];
+      const investmentTypeFriendly = selectedInvestmentOption.getAttribute('data-friendly');
       
       // Recupera a descrição amigável diretamente do option selecionado
       const assetSelect = document.getElementById('investmentAsset');
@@ -113,6 +109,7 @@
       const investmentAsset = assetSelect.value;
       const assetFriendly = selectedAssetOption.getAttribute('data-friendly');
 
+      // Define o objeto assetRates
       const assetRates = {
         bitcoin: 0.0322,
         dolar: 0.0048,
@@ -151,9 +148,11 @@
       const gainInitial = totalInvestment - initialInvestment;
       const gainInitialPercentage = (gainInitial / initialInvestment) * 100;
 
+      // Armazena todos os dados, incluindo o objeto assetRates
       const dataToStore = {
         initialInvestment,
         investmentType,
+        investmentTypeFriendly,
         investmentValue,
         investmentPeriod,
         investmentAsset,
@@ -161,7 +160,8 @@
         totalInvestment,
         totalContributions,
         gainPercentage,
-        gainInitialPercentage
+        gainInitialPercentage,
+        assetRates  // Armazena o objeto assetRates
       };
 
       localStorage.setItem('investmentData', JSON.stringify(dataToStore));
