@@ -8,7 +8,7 @@
   <script>
     // Se o tema não estiver definido no localStorage, define como 'theme-default'
     if (!localStorage.getItem('theme')) {
-      localStorage.setItem('theme', 'theme-violet');
+      localStorage.setItem('theme', 'theme-default');
     }
     // Aplica o tema salvo ao carregar a página
     document.documentElement.className = localStorage.getItem('theme');

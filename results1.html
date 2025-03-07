@@ -17,77 +17,8 @@
       height: 300px;
       width: 100%;
     }
-
-/* Estilos para os resultados */
-.results-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 15px;
-}
-
-.result-item {
-  background: linear-gradient(90deg, var(--color-primary, #8e44ad), var(--color-primary-light, #9b59b6));
-  border-radius: 12px;
-  padding: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: 0px 5px 5px rgba(0,0,0,0.2);
-  height: 100px; /* Altura fixa para manter todos iguais */
-  width: 100%;
-}
-
-/* Ícone à esquerda */
-.result-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  margin-right: 15px;
-  font-size: 1.2rem;
-  font-weight: bold;
-  background-color: rgba(255, 255, 255, 0.2);
-  color: #fff;
-  flex-shrink: 0;
-}
-
-/* Texto do Card 3 */
-.result-info {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  flex: 1;
-  min-width: 0;
-}
-
-.result-info h4 {
-  font-size: 1rem;
-  color: var(--color-text-light, #ffffff);
-  margin-bottom: 5px;
-}
-
-.result-info p {
-  font-size: 0.65rem;
-  color: rgba(255, 255, 255, 0.8);
-  max-width: 90%;
-  word-wrap: break-word; /* Permite quebra de linha natural */
-  white-space: normal; /* Garante que o texto seja exibido por completo */
-}
-
-/* Valor */
-.result-amount {
-  font-weight: bold;
-  font-size: 1rem;
-  color: var(--color-text-light, #ffffff);
-  margin-left: 10px;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
- </style>
+   
+  </style>
 </head>
 <body>
 
@@ -115,8 +46,7 @@
     <!-- Card 3: Resultados -->
     <div class="card results-card">
       <h2>Resultados</h2>
-      <!-- Aqui inserimos a lista de resultados no estilo da imagem -->
-      <div class="results-list" id="resultList"></div>
+      <div class="result" id="result"></div>
     </div>
   </div>
 
@@ -153,34 +83,27 @@
         <p><strong>Ativo:</strong> ${data.assetFriendly}</p>
       `;
 
-      // Exibe os resultados no estilo da imagem
-const resultList = document.getElementById('resultList');
-
-const arrowClass = (value) => value >= 0 ? "↑" : "↓";
-const formatCurrency = (value) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-const formatPercentage = (value) => value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%';
-
-const resultados = [
-  { label: "Valor Acumulado", value: data.totalInvestment, formatted: formatCurrency(data.totalInvestment) },
-  { label: "Valor Total Aportado", value: data.totalContributions, formatted: formatCurrency(data.totalContributions) },
-  { label: "Ganho (sobre total aportado)", value: data.gainPercentage, formatted: formatPercentage(data.gainPercentage) },
-  { label: "Ganho (sobre valor inicial)", value: data.gainInitialPercentage, formatted: formatPercentage(data.gainInitialPercentage) }
-];
-
-resultList.innerHTML = resultados.map(res => `
-  <div class="result-item">
-    <div class="result-icon">${arrowClass(res.value)}</div>
-    <div class="result-info">
-      <h4>${res.label}</h4>
-      <p>Resultado Calculado</p>
-    </div>
-    <div class="result-amount">${res.formatted}</div>
-  </div>
-`).join('');
-
+      // Exibe os resultados como barras horizontais degradê
+      const resultEl = document.getElementById('result');
+      resultEl.innerHTML = `
+        <div class="result-bar">
+          <span><strong>Valor Acumulado:</strong>
+          ${data.totalInvestment.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
+        </div>
+        <div class="result-bar">
+          <span><strong>Valor Total Aportado:</strong>
+          ${data.totalContributions.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
+        </div>
+        <div class="result-bar">
+            <span><strong>Ganho (sobre total aportado):</strong> ${data.gainPercentage.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%</span>
+        </div>
+        <div class="result-bar">
+            <span><strong>Ganho (sobre valor inicial):</strong> ${data.gainInitialPercentage.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%</span>
+        </div>
+      `;
 
       // --------------------------
-      // Geração do gráfico (sem alterações)
+      // Geração do gráfico
       // --------------------------
       let totalPeriods, periodicRate;
       const investmentType = data.investmentType;
@@ -278,14 +201,11 @@ resultList.innerHTML = resultados.map(res => `
                 color: 'var(--color-text-main)'
               },
               ticks: {
-                display: true,
-                font: { size: 12 },
+                font: {
+                  size: 12
+                },
                 color: 'var(--color-text-main)'
-              },
-              grid: {
-                display: false,
-                drawBorder: false
-              }              
+              }
             },
             y: {
               title: {
@@ -297,7 +217,6 @@ resultList.innerHTML = resultados.map(res => `
                 color: 'var(--color-text-main)'
               },
               ticks: {
-                display: true,
                 font: {
                   size: 12
                 },
@@ -305,9 +224,6 @@ resultList.innerHTML = resultados.map(res => `
                 callback: function(value) {
                   return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                 }
-              },
-              grid: {
-                display: false
               }
             }
           }

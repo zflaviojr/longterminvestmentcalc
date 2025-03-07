@@ -239,16 +239,17 @@
   }
 
   .result-bar {
-  height: 30px;
-  border-radius: 15px;
-  background: linear-gradient(90deg, var(--bar-bg-gradient-start), var(--bar-bg-gradient-end));
-  display: flex;
-  align-items: center;
-  padding: 0 10px;
-  margin: 10px 0;
-  color: var(--color-text-main);
-  font-weight: 100;
-}
-.result-bar span {
-  margin-left: auto;
-}
+    height: 30px;
+    border-radius: 15px;
+    background: linear-gradient(90deg, var(--bar-bg-gradient-start), var(--bar-bg-gradient-end));
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    margin: 10px 0;
+    color: var(--color-text-main);
+    font-weight: 100;
+  }
+  
+  .result-bar span {
+    margin-left: auto;
+  }
