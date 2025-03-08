@@ -90,7 +90,12 @@ body {
 
 /* Cabeçalho fixo, simulando um app */
 .app-header {
-    background: linear-gradient(90deg, var(--bar-bg-gradient-start), var(--bar-bg-gradient-end));
+    /* Degradê com transparência para o texto branco ficar mais visível */
+    background: linear-gradient(
+        90deg,
+        rgba(var(--color-primary-rgb), 0.9) 0%,
+        rgba(var(--color-primary-rgb), 0.6) 100%
+    );
     color: var(--color-text-header);
     text-align: center;
     font-size: 1.5rem;
@@ -100,12 +105,15 @@ body {
     top: 0;
     width: 100%;
     z-index: 999;
+    /* Curva no canto inferior direito */
+    border-bottom-right-radius: 25px;
 }
 
 /* Aplica a nova fonte nos títulos do cabeçalho */
 .app-header h1,
 .app-header h3 {
     font-family: 'Roboto', sans-serif;
+    margin: 0; /* Para garantir que não haja deslocamento */
 }
 
 .app-header h1 {
@@ -113,25 +121,31 @@ body {
 }
 
 .app-header h3 {
-    font-weight: 250;
+    font-weight: 500; /* um pouco mais forte que 250 para melhor legibilidade */
 }
 
-/* Estilização do botão "Voltar" para um visual limpo e posicionado à esquerda sem afetar o título */
+/* Botão de voltar em formato de seta circular */
 .app-header .button-back {
     position: absolute;
     left: 15px;
     top: 50%;
     transform: translateY(-50%);
-    background: none;
+    width: 35px;
+    height: 35px;
+    background-color: rgba(255, 255, 255, 0.2);
     border: none;
-    font-size: 1rem;
-    color: var(--color-text-header);
+    border-radius: 50%;
+    font-size: 1.2rem;
+    color: #fff;
     cursor: pointer;
-    padding: 5px 10px;
+    padding: 0;
+    line-height: 35px; /* para alinhar o ícone verticalmente */
+    text-align: center;
+    outline: none; /* remove o contorno no foco */
 }
 
 .app-header .button-back:hover {
-    opacity: 0.8;
+    background-color: rgba(255, 255, 255, 0.3);
 }
 
 /* Container geral (como se fosse a "tela" do app) */
@@ -188,9 +202,8 @@ select:focus {
     border-color: var(--color-input-focus);
 }
 
-/* Botão de calcular e botão de voltar */
-input[type="submit"],
-.button-back {
+/* Botão de calcular (mantemos o estilo só para input[type="submit"]) */
+input[type="submit"] {
     background-color: var(--color-primary);
     color: #fff;
     font-weight: 600;
@@ -205,8 +218,7 @@ input[type="submit"],
     text-align: center;
 }
 
-input[type="submit"]:hover,
-.button-back:hover {
+input[type="submit"]:hover {
     filter: brightness(0.9);
 }
 
