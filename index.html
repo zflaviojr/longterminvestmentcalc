@@ -13,13 +13,10 @@
     // Aplica o tema salvo ao carregar a página
     document.documentElement.className = localStorage.getItem('theme');
 
-    /* 
-      Exemplo de função para alterar o tema (se necessário):
-      function toggleTheme(newTheme) {
-        localStorage.setItem('theme', newTheme);
-        document.documentElement.className = newTheme;
-      }
-    */
+    // Inicializa a flag da barra inferior se não estiver definida
+    //if (localStorage.getItem('showFooter') === null) {
+      localStorage.setItem('showFooter', 'false');
+    //}
   </script>
 </head>
 <body>
@@ -81,6 +78,15 @@
         <input type="submit" value="Calcular">
       </form>
     </div>
+    <!-- Opção para exibir/ocultar a barra inferior -->
+    <!--
+    <div class="footer-toggle" style="text-align: center; margin: 10px 0;">
+      <label>
+        <input type="checkbox" id="toggleFooter" checked>
+        Exibir Barra Inferior
+      </label>
+    </div>
+    -->
   </div>
 
   <!-- Barra inferior fixa (simulando navegação do app) -->
@@ -91,6 +97,28 @@
   </div>
 
   <script>
+    // Ajusta a exibição da barra inferior com base na flag armazenada
+    document.addEventListener('DOMContentLoaded', () => {
+      //const toggleFooter = document.getElementById('toggleFooter');
+      if (localStorage.getItem('showFooter') === 'false') {
+        //toggleFooter.checked = false; //descomentar se quiser que funcione com o checkbox
+        document.querySelector('.app-footer').style.display = 'none';
+      } else {
+        //toggleFooter.checked = true; //descomentar se quiser que funcione com o checkbox
+        document.querySelector('.app-footer').style.display = 'flex';
+      }
+
+      toggleFooter.addEventListener('change', () => {
+        if (toggleFooter.checked) {
+          localStorage.setItem('showFooter', 'true');
+          document.querySelector('.app-footer').style.display = 'flex';
+        } else {
+          localStorage.setItem('showFooter', 'false');
+          document.querySelector('.app-footer').style.display = 'none';
+        }
+      });
+    });
+
     document.getElementById('investmentForm').addEventListener('submit', function(event) {
       event.preventDefault();
 

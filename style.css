@@ -253,3 +253,81 @@
   .result-bar span {
     margin-left: auto;
   }
+
+    /* Container do gráfico */
+    .chart-container {
+        position: relative;
+        margin: 0 auto; /* Centraliza horizontalmente */
+        height: 300px;
+        width: 100%;
+      }
+  
+  /* Estilos para os resultados */
+  .results-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 15px;
+  }
+  
+  .result-item {
+    background: linear-gradient(90deg, var(--color-primary, #8e44ad), var(--color-primary-light, #9b59b6));
+    border-radius: 12px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0px 5px 5px rgba(0,0,0,0.2);
+    height: 100px; /* Altura fixa para manter todos iguais */
+    width: 100%;
+  }
+  
+  /* Ícone à esquerda */
+  .result-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    flex-shrink: 0;
+  }
+  
+  /* Texto do Card 3 */
+  .result-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .result-info h4 {
+    font-size: 0.80rem;
+    color: var(--color-text-light, #ffffff);
+    margin-bottom: 5px;
+  }
+  
+  .result-info p {
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.8);
+    max-width: 90%;
+    word-wrap: break-word; /* Permite quebra de linha natural */
+    white-space: normal; /* Garante que o texto seja exibido por completo */
+  }
+  
+  /* Valor */
+  .result-amount {
+    font-weight: bold;
+    font-size: 0.85rem;
+    color: var(--color-text-light, #ffffff);
+    margin-left: 10px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  
