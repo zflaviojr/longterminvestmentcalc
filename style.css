@@ -92,9 +92,9 @@ body {
 .app-header {
     /* Degradê com transparência para o texto branco ficar mais visível */
     background: linear-gradient(
-        90deg,
-        rgba(var(--color-primary-rgb), 0.9) 0%,
-        rgba(var(--color-primary-rgb), 0.6) 100%
+        180deg,
+        rgba(var(--color-primary-rgb), 1.0) 60%,
+        rgba(var(--color-primary-rgb), 0.9) 100%
     );
     color: var(--color-text-header);
     text-align: center;
