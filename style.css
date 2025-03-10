@@ -368,3 +368,58 @@ input[type="submit"]:hover {
     white-space: nowrap;
     flex-shrink: 0;
 }
+
+/* Estilos para o Card de Resultados Periódicos */
+.periodic-results-card {
+    margin-top: 20px;
+}
+
+.periodic-results-card h2 {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+/* Cabeçalho com títulos das colunas */
+.periodic-result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: rgba(var(--color-primary-rgb), 0.2);
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.periodic-result-header div {
+    flex: 1;
+    text-align: center;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: var(--color-text-main);
+}
+
+/* Estilização dos itens de resultados periódicos */
+.periodic-result-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: rgba(var(--color-primary-rgb), 0.1);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-shadow: 0px 2px 4px rgba(0,0,0,0.1);
+}
+
+.period-label, 
+.period-value, 
+.period-contribution, 
+.period-percentage {
+    flex: 1;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--color-text-main);
+}
+
+.periodic-result-item:last-child {
+    margin-bottom: 0;
+}

@@ -19,8 +19,8 @@
       height: 50px;
       border-radius: 50%;
       border: none;
-      background-color: rgba(var(--color-primary-rgb, 0, 123, 255), 0.6); /* cor primária com transparência */
-      color: #fff; /* setas em branco */
+      background-color: rgba(var(--color-primary-rgb, 0, 123, 255), 0.6);
+      color: #fff;
       font-size: 24px;
       display: flex;
       align-items: center;
@@ -31,13 +31,12 @@
       transition: opacity 0.5s ease;
       opacity: 1;
     }
-    /* Classe para o fade-out */
     .floating-scroll-button.hidden {
       opacity: 0;
       pointer-events: none;
     }
     #scrollDownBtn {
-      bottom: 90px; /* posicionamento acima da barra inferior, se visível */
+      bottom: 90px;
     }
     #scrollUpBtn {
       top: 90px;
@@ -70,12 +69,18 @@
     <!-- Card 3: Resultados -->
     <div class="card results-card">
       <h2>Resultados</h2>
-      <!-- Aqui inserimos a lista de resultados no estilo da imagem -->
       <div class="results-list" id="resultList"></div>
     </div>
+
+    <!-- Novo Card 4: Resultados Periódicos -->
+    <div class="card periodic-results-card">
+      <h2>Resultados Periódicos</h2>
+      <div class="results-list" id="periodicResultList"></div>
+    </div>
+
   </div>
 
-  <!-- Barra inferior fixa (simulando navegação do app) -->
+  <!-- Barra inferior fixa -->
   <div class="app-footer">
     <button>Home</button>
     <button>Histórico</button>
@@ -95,7 +100,6 @@
       window.history.back();
     });
 
-    // Verifica a flag para exibir ou ocultar a barra inferior
     document.addEventListener('DOMContentLoaded', () => {
       if (localStorage.getItem('showFooter') === 'false') {
         document.querySelector('.app-footer').style.display = 'none';
@@ -106,8 +110,6 @@
     const storedData = localStorage.getItem('investmentData');
     if (storedData) {
       const data = JSON.parse(storedData);
-
-      // Exibe o resumo dos parâmetros
       const summaryEl = document.getElementById('summary');
       const aporteFriendly = data.investmentTypeFriendly;
       
@@ -119,9 +121,7 @@
         <p><strong>Ativo:</strong> ${data.assetFriendly}</p>
       `;
 
-      // Exibe os resultados no estilo da imagem
       const resultList = document.getElementById('resultList');
-
       const arrowClass = (value) => value >= 0 ? "↑" : "↓";
       const formatCurrency = (value) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
       const formatPercentage = (value) => value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%';
@@ -145,7 +145,7 @@
       `).join('');
 
       // --------------------------
-      // Geração do gráfico (sem alterações)
+      // Geração do gráfico (mantenho inalterado)
       // --------------------------
       let totalPeriods, periodicRate;
       const investmentType = data.investmentType;
@@ -189,11 +189,9 @@
         labels.push(i.toString());
       }
 
-      // Obtém as variáveis CSS do tema atual
       const rootStyles = getComputedStyle(document.documentElement);
       const primaryRGB = rootStyles.getPropertyValue('--color-primary-rgb').trim();
 
-      // Cria um gradiente para o gráfico
       const ctx = document.getElementById('portfolioChart').getContext('2d');
       const gradient = ctx.createLinearGradient(0, 0, 0, 300);
       gradient.addColorStop(0, `rgba(${primaryRGB}, 0.5)`);
@@ -225,9 +223,7 @@
               display: true,
               onClick: null,
               labels: {
-                font: {
-                  size: 14
-                },
+                font: { size: 14 },
                 color: 'var(--color-text-main)'
               }
             }
@@ -237,9 +233,7 @@
               title: {
                 display: true,
                 text: 'Período (meses)',
-                font: {
-                  size: 14
-                },
+                font: { size: 14 },
                 color: 'var(--color-text-main)'
               },
               ticks: {
@@ -256,46 +250,88 @@
               title: {
                 display: true,
                 text: 'Valor (R$)',
-                font: {
-                  size: 14
-                },
+                font: { size: 14 },
                 color: 'var(--color-text-main)'
               },
               ticks: {
                 display: true,
-                font: {
-                  size: 12
-                },
+                font: { size: 12 },
                 color: 'var(--color-text-main)',
                 callback: function(value) {
                   return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                 }
               },
-              grid: {
-                display: false
-              }
+              grid: { display: false }
             }
           }
         }
       });
+
+      // --------------------------
+      // Geração dos Resultados Periódicos (Novo Card)
+      // --------------------------
+      const periodicResultList = document.getElementById('periodicResultList');
+      
+      // Cabeçalho com os títulos das colunas
+      let headerHtml = `
+        <div class="periodic-result-header">
+          <div class="period-header-label">Período</div>
+          <div class="period-header-value">Valor Acumulado</div>
+          <div class="period-header-contribution">Valor Aportado</div>
+          <div class="period-header-percentage">Percentual</div>
+        </div>
+      `;
+      let periodicResultsHtml = '';
+
+      if (data.investmentPeriod < 12) {
+        let cumulativeValue = data.initialInvestment;
+        let cumulativeContribution = data.initialInvestment;
+        for (let month = 1; month <= data.investmentPeriod; month++) {
+          cumulativeValue = cumulativeValue * (1 + rate) + data.investmentValue;
+          cumulativeContribution += data.investmentValue;
+          const percentage = ((cumulativeValue / cumulativeContribution) - 1) * 100;
+          periodicResultsHtml += `
+            <div class="periodic-result-item">
+              <div class="period-label">Mês ${month}</div>
+              <div class="period-value">${formatCurrency(cumulativeValue)}</div>
+              <div class="period-contribution">${formatCurrency(cumulativeContribution)}</div>
+              <div class="period-percentage">${formatPercentage(percentage)}</div>
+            </div>
+          `;
+        }
+      } else {
+        const years = Math.floor(data.investmentPeriod / 12);
+        let cumulativeValue = data.initialInvestment;
+        let cumulativeContribution = data.initialInvestment;
+        for (let year = 1; year <= years; year++) {
+          for (let m = 1; m <= 12; m++) {
+            cumulativeValue = cumulativeValue * (1 + rate) + data.investmentValue;
+            cumulativeContribution += data.investmentValue;
+          }
+          const percentage = ((cumulativeValue / cumulativeContribution) - 1) * 100;
+          periodicResultsHtml += `
+            <div class="periodic-result-item">
+              <div class="period-label">Ano ${year}</div>
+              <div class="period-value">${formatCurrency(cumulativeValue)}</div>
+              <div class="period-contribution">${formatCurrency(cumulativeContribution)}</div>
+              <div class="period-percentage">${formatPercentage(percentage)}</div>
+            </div>
+          `;
+        }
+      }
+      periodicResultList.innerHTML = headerHtml + periodicResultsHtml;
     }
 
-    // Lógica dos botões de rolagem com fade-out após 3 segundos
     let hideTimeout;
-
     function updateScrollButtons() {
       const scrollDownBtn = document.getElementById('scrollDownBtn');
       const scrollUpBtn = document.getElementById('scrollUpBtn');
-
-      // Verifica se há mais conteúdo abaixo para exibir o botão de rolagem para baixo
       if ((window.innerHeight + window.scrollY) < document.body.scrollHeight) {
         scrollDownBtn.style.display = 'flex';
         scrollDownBtn.classList.remove('hidden');
       } else {
         scrollDownBtn.style.display = 'none';
       }
-
-      // Verifica se há rolagem acima para exibir o botão de rolagem para cima
       if (window.scrollY > 0) {
         scrollUpBtn.style.display = 'flex';
         scrollUpBtn.classList.remove('hidden');
@@ -303,11 +339,9 @@
         scrollUpBtn.style.display = 'none';
       }
     }
-
     function showScrollButtonsWithTimeout() {
       updateScrollButtons();
       clearTimeout(hideTimeout);
-      // Após 3 segundos, adiciona a classe que aplica o fade-out
       hideTimeout = setTimeout(() => {
         const scrollDownBtn = document.getElementById('scrollDownBtn');
         const scrollUpBtn = document.getElementById('scrollUpBtn');
@@ -319,20 +353,13 @@
         }
       }, 3000);
     }
-
-    // Eventos para que os botões reapareçam ao rolar, redimensionar ou clicar na página
     window.addEventListener('scroll', showScrollButtonsWithTimeout);
     window.addEventListener('resize', showScrollButtonsWithTimeout);
     document.addEventListener('click', showScrollButtonsWithTimeout);
-
-    // Inicializa os botões com o timer de 3 segundos
     showScrollButtonsWithTimeout();
-
-    // Eventos dos botões de rolagem para movimentar a página
     document.getElementById('scrollDownBtn').addEventListener('click', () => {
       window.scrollBy({ top: window.innerHeight, behavior: 'smooth' });
     });
-
     document.getElementById('scrollUpBtn').addEventListener('click', () => {
       window.scrollBy({ top: -window.innerHeight, behavior: 'smooth' });
     });
