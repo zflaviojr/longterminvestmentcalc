@@ -480,33 +480,3 @@ input[type="submit"]:hover {
 }
 
 
-.floating-scroll-button {
-      position: fixed;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      border: none;
-      background-color: rgba(var(--color-primary-rgb, 0, 123, 255), 0.6);
-      color: #fff;
-      font-size: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-      z-index: 1000;
-      transition: opacity 0.5s ease;
-      opacity: 1;
-    }
-    .floating-scroll-button.hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
-    #scrollDownBtn {
-      bottom: 90px;
-    }
-    #scrollUpBtn {
-      top: 90px;
-    }
