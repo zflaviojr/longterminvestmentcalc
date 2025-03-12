@@ -435,49 +435,73 @@ input[type="submit"]:hover {
 }
 
 /* Cabeçalho com títulos das colunas */
+/* ----------- AJUSTES PARA RESULTADOS PERIÓDICOS ----------- */
+
+/* Mantém o cabeçalho com 4 colunas, uma linha só */
 .periodic-result-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 8px;
     padding: 10px 15px;
     background-color: rgba(var(--color-primary-rgb), 0.2);
     border-radius: 8px;
     margin-bottom: 10px;
-}
-
-.periodic-result-header div {
-    flex: 1;
+    box-sizing: border-box;
     text-align: center;
+  }
+  
+  /* Cabeçalho: cada div com texto centralizado */
+  .periodic-result-header div {
     font-size: 0.9rem;
     font-weight: bold;
     color: var(--color-text-main);
-}
-
-/* Estilização dos itens de resultados periódicos */
-.periodic-result-item {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    align-items: center;   /* centraliza verticalmente */
+    justify-content: center; /* centraliza horizontalmente */
+    height: 100%;         /* para ocupar a altura do grid */
+  }
+  
+  /* Ajuste nos itens: 4 colunas e cada célula comporta 2 linhas */
+  .periodic-result-item {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr; /* Período | Acumulado | Aportado | Percentual */
+    gap: 8px;
     padding: 10px 15px;
     background-color: rgba(var(--color-primary-rgb), 0.1);
     border-radius: 8px;
     margin-bottom: 10px;
     box-shadow: 0px 2px 4px rgba(0,0,0,0.1);
-}
-
-.period-label, 
-.period-value, 
-.period-contribution, 
-.period-percentage {
-    flex: 1;
+    box-sizing: border-box;
     text-align: center;
+    align-items: center; /* cada célula é centralizada verticalmente no grid */
+  }
+  
+  /* Cada coluna é um flex container vertical:
+     se houver 2 spans ou um <br>, elas ficam empilhadas no centro. */
+  .periodic-result-item > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* centraliza verticalmente dentro da coluna */
+    align-items: center;     /* centraliza horizontalmente */
+    gap: 4px;                /* espaço entre as linhas */
     font-size: 0.85rem;
     color: var(--color-text-main);
-}
-
-.periodic-result-item:last-child {
+  }
+  
+  /* Remove a margem do último item */
+  .periodic-result-item:last-child {
     margin-bottom: 0;
-}
+  }
+  
+  /* Exemplo de responsividade para telas muito estreitas */
+  @media (max-width: 400px) {
+    .periodic-result-header,
+    .periodic-result-item {
+      /* Se quiser, pode reduzir para 2 colunas ou até 1. */
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  
 
 
 .floating-scroll-button {
