@@ -15,6 +15,7 @@
 :root {
     --color-primary: #FFC300;
     --color-primary-rgb: 255, 195, 0; /* Cor primária em formato RGB (padrão) */
+    --color-secundary: #f5bc01;
     --color-bg: #f2f2f2;
     --color-text-header: #fff;
     --color-text-main: #333;
@@ -39,6 +40,7 @@
 .theme-default {
     --color-primary: #FFC300;
     --color-primary-rgb: 255, 195, 0;
+    --color-secundary: #f5bc01;
     --color-bg: #f2f2f2;
     --color-text-header: #fff;
     --color-text-main: #333;
@@ -63,6 +65,7 @@
 .theme-violet {
     --color-primary: #7269ef;
     --color-primary-rgb: 114, 105, 239; /* Cor primária em formato RGB */
+    --color-secundary: #4940c7e1;
     --color-bg: #f8f9fd;
     --color-text-header: #fff;
     --color-text-main: #333;
@@ -269,6 +272,58 @@ input[type="submit"]:hover {
 .app-container .card:first-child {
     background: linear-gradient(135deg, var(--card-bg-gradient-start) 0%, var(--card-bg-gradient-end) 100%) !important;
 }
+
+
+/* --------------------------------------------
+   Estilos ajustados para o Card de Valor Acumulado
+   -------------------------------------------- */
+   .accumulated-value-card {
+    background: linear-gradient(90deg, var(--color-primary, #8e44ad), var(--color-primary-light, #9b59b6));
+    border-radius: 12px;
+    box-shadow: 0px 5px 5px rgba(0,0,0,0.2);
+    padding: 15px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .accumulated-value-card h2.accumulated-title {
+    text-align: center;
+    margin-bottom: 15px;
+    color: var(--color-text-light, #ffffff) !important;
+  }
+      
+  .accumulated-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  
+  .accumulated-value-amount {
+    font-size: 2rem; /* Destaque */
+    font-weight: bold;
+    color: var(--color-secundary) !important;
+    text-shadow: 0 1px 2px rgba(102, 102, 102, 0.25);
+  }
+  
+  
+  .accumulated-variation {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+  }
+  
+  .accumulated-percent,
+  .accumulated-diff {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-text-light, #ffffff);
+  }
+    
+
 
 /* Ajuste para centralizar o título do card de Resultados */
 .card.results-card h2 {

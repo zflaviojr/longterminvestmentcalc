@@ -9,39 +9,6 @@
     // Aplica o tema salvo ao carregar a página
     document.documentElement.className = localStorage.getItem('theme') || 'theme-default';
   </script>
-  <!-- Estilos para os botões de rolagem flutuantes -->
-  <style>
-    .floating-scroll-button {
-      position: fixed;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      border: none;
-      background-color: rgba(var(--color-primary-rgb, 0, 123, 255), 0.6);
-      color: #fff;
-      font-size: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-      z-index: 1000;
-      transition: opacity 0.5s ease;
-      opacity: 1;
-    }
-    .floating-scroll-button.hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
-    #scrollDownBtn {
-      bottom: 90px;
-    }
-    #scrollUpBtn {
-      top: 90px;
-    }
-  </style>
 </head>
 <body>
 
@@ -58,6 +25,18 @@
       <div id="summary"></div>
     </div>
 
+    <!-- NOVO CARD: Valor Acumulado -->
+    <div class="card accumulated-value-card">
+      <h2 class="accumulated-title">Valor Acumulado</h2>
+      <div class="accumulated-info">
+        <div id="accumulatedValue" class="accumulated-value-amount">--</div>
+        <div class="accumulated-variation">
+          <span id="accumulatedPercent" class="accumulated-percent">--</span>
+          <span id="accumulatedDiff" class="accumulated-diff">--</span>
+        </div>
+      </div>
+    </div>
+
     <!-- Card 2: Evolução da Carteira (Gráfico) -->
     <div class="card">
       <h2>Evolução da Carteira</h2>
@@ -72,12 +51,11 @@
       <div class="results-list" id="resultList"></div>
     </div>
 
-    <!-- Novo Card 4: Resultados Periódicos -->
+    <!-- Card 4: Resultados Periódicos -->
     <div class="card periodic-results-card">
       <h2>Resultados Periódicos</h2>
       <div class="results-list" id="periodicResultList"></div>
     </div>
-
   </div>
 
   <!-- Barra inferior fixa -->
@@ -110,9 +88,10 @@
     const storedData = localStorage.getItem('investmentData');
     if (storedData) {
       const data = JSON.parse(storedData);
+
       const summaryEl = document.getElementById('summary');
       const aporteFriendly = data.investmentTypeFriendly;
-      
+
       summaryEl.innerHTML = `
         <p><strong>Investimento Inicial:</strong> R$ ${data.initialInvestment.toLocaleString('pt-BR')}</p>
         <p><strong>Tipo de Aporte:</strong> ${aporteFriendly}</p>
@@ -121,17 +100,48 @@
         <p><strong>Ativo:</strong> ${data.assetFriendly}</p>
       `;
 
-      const resultList = document.getElementById('resultList');
-      const arrowClass = (value) => value >= 0 ? "↑" : "↓";
-      const formatCurrency = (value) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-      const formatPercentage = (value) => value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%';
+      // ---------------------------------------------------
+      // NOVO: Atualiza o Card de Valor Acumulado
+      // ---------------------------------------------------
+      const accumulatedValueEl = document.getElementById('accumulatedValue');
+      const accumulatedPercentEl = document.getElementById('accumulatedPercent');
+      const accumulatedDiffEl = document.getElementById('accumulatedDiff');
 
+      // Valor acumulado
+      const formatCurrency = (value) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      const formatPercentage = (value) => value.toLocaleString('pt-BR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }) + '%';
+
+      accumulatedValueEl.textContent = formatCurrency(data.totalInvestment);
+
+      // Diferença em R$ (entre o total acumulado e o total aportado)
+      const difference = data.totalInvestment - data.totalContributions;
+      // Ganho percentual (sobre total aportado)
+      const pct = data.gainPercentage; // já vem em formato decimal, ex: 3.28
+
+      // Sinal (+ ou -)
+      const sign = difference >= 0 ? '+' : '-';
+      const signPct = pct >= 0 ? '+' : '-';
+
+      accumulatedPercentEl.textContent = `${signPct}${formatPercentage(Math.abs(pct))}`;
+      accumulatedDiffEl.textContent = `${sign}${formatCurrency(Math.abs(difference))}`;
+
+      // ---------------------------------------------------
+      // Renderiza o Card de Resultados (removendo "Valor Acumulado" dele)
+      // ---------------------------------------------------
+      const resultList = document.getElementById('resultList');
+
+      // A lista agora começa a partir de "Valor Total Aportado" (removemos "Valor Acumulado")
       const resultados = [
-        { label: "Valor Acumulado", value: data.totalInvestment, formatted: formatCurrency(data.totalInvestment) },
+        // REMOVIDO: Valor Acumulado
         { label: "Valor Total Aportado", value: data.totalContributions, formatted: formatCurrency(data.totalContributions) },
         { label: "Ganho (sobre total aportado)", value: data.gainPercentage, formatted: formatPercentage(data.gainPercentage) },
         { label: "Ganho (sobre valor inicial)", value: data.gainInitialPercentage, formatted: formatPercentage(data.gainInitialPercentage) }
       ];
+
+      const arrowClass = (value) => value >= 0 ? "↑" : "↓";
 
       resultList.innerHTML = resultados.map(res => `
         <div class="result-item">
@@ -144,9 +154,9 @@
         </div>
       `).join('');
 
-      // --------------------------
-      // Geração do gráfico (mantenho inalterado)
-      // --------------------------
+      // ---------------------------------------------------
+      // Geração do gráfico (SEM ALTERAÇÕES)
+      // ---------------------------------------------------
       let totalPeriods, periodicRate;
       const investmentType = data.investmentType;
       const assetRates = data.assetRates ? data.assetRates : {
@@ -176,7 +186,6 @@
         periodicRate = Math.pow(1 + rate, 12) - 1;
       }
 
-      // Array de valores e rótulos
       const portfolioValues = [];
       const labels = [];
       let currentValue = initialInvestment;
@@ -244,7 +253,7 @@
               grid: {
                 display: false,
                 drawBorder: false
-              }              
+              }
             },
             y: {
               title: {
@@ -267,12 +276,11 @@
         }
       });
 
-      // --------------------------
-      // Geração dos Resultados Periódicos (Novo Card)
-      // --------------------------
+      // ---------------------------------------------------
+      // Card 4: Resultados Periódicos (SEM ALTERAÇÕES)
+      // ---------------------------------------------------
       const periodicResultList = document.getElementById('periodicResultList');
-      
-      // Cabeçalho com os títulos das colunas
+
       let headerHtml = `
         <div class="periodic-result-header">
           <div class="period-header-label">Período</div>
@@ -322,6 +330,7 @@
       periodicResultList.innerHTML = headerHtml + periodicResultsHtml;
     }
 
+    // Lógica dos botões de rolagem
     let hideTimeout;
     function updateScrollButtons() {
       const scrollDownBtn = document.getElementById('scrollDownBtn');
@@ -357,6 +366,7 @@
     window.addEventListener('resize', showScrollButtonsWithTimeout);
     document.addEventListener('click', showScrollButtonsWithTimeout);
     showScrollButtonsWithTimeout();
+
     document.getElementById('scrollDownBtn').addEventListener('click', () => {
       window.scrollBy({ top: window.innerHeight, behavior: 'smooth' });
     });
