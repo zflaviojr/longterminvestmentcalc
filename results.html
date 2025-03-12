@@ -285,7 +285,6 @@
         <div class="periodic-result-header">
           <div class="period-header-label">Período</div>
           <div class="period-header-value">Valor Acumulado</div>
-          <div class="period-header-contribution">Valor Aportado</div>
           <div class="period-header-percentage">Percentual</div>
         </div>
       `;
@@ -302,7 +301,6 @@
             <div class="periodic-result-item">
               <div class="period-label">Mês ${month}</div>
               <div class="period-value">${formatCurrency(cumulativeValue)}</div>
-              <div class="period-contribution">${formatCurrency(cumulativeContribution)}</div>
               <div class="period-percentage">${formatPercentage(percentage)}</div>
             </div>
           `;
@@ -321,7 +319,6 @@
             <div class="periodic-result-item">
               <div class="period-label">Ano ${year}</div>
               <div class="period-value">${formatCurrency(cumulativeValue)}</div>
-              <div class="period-contribution">${formatCurrency(cumulativeContribution)}</div>
               <div class="period-percentage">${formatPercentage(percentage)}</div>
             </div>
           `;
